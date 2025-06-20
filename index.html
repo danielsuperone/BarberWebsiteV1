@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Merchant Barber</title> <link rel="icon" type="image/png" href="https://i.imgur.com/KgYjZvD.png" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom CSS for calendar */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .calendar-header {
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+        }
+        .calendar-day {
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .calendar-day:hover {
+            background-color: #f3f4f6;
+        }
+        .calendar-day.selected {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .calendar-day.disabled {
+            color: #d1d5db;
+            cursor: not-allowed;
+        }
+        
+        /* Animation for booking confirmation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .confirmation {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Custom scrollbar for services dropdown */
+        .services-dropdown::-webkit-scrollbar {
+            width: 8px;
+        }
+        .services-dropdown::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .services-dropdown::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<!-- Navigation -->
+<nav class="bg-black text-white shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <img src="https://i.imgur.com/KgYjZvD.png" alt="Logo" class="w-8 h-8 rounded-full">
+            <span class="text-xl font-bold">The Merchant Barber</span>
+        </div>
+        <div class="hidden md:flex space-x-6">
+            <a href="#" class="hover:text-yellow-400 transition">Home</a>
+            <a href="#services" class="hover:text-yellow-400 transition">Services</a>
+            <a href="#barbers" class="hover:text-yellow-400 transition">Our Barbers</a>
+            <a href="#book" class="hover:text-yellow-400 transition">Book Now</a>
+            <a href="#contact" class="hover:text-yellow-400 transition">Contact</a>
+        </div>
+        <button class="md:hidden text-2xl" id="mobile-menu-button">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden bg-gray-900 px-4 py-2" id="mobile-menu">
+            <a href="#" class="block py-2 hover:text-yellow-400 transition">Home</a>
+            <a href="#services" class="block py-2 hover:text-yellow-400 transition">Services</a>
+            <a href="#barbers" class="block py-2 hover:text-yellow-400 transition">Our Barbers</a>
+            <a href="#book" class="block py-2 hover:text-yellow-400 transition">Book Now</a>
+            <a href="#contact" class="block py-2 hover:text-yellow-400 transition">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-r from-black to-gray-800 text-white py-20">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">High Quality Haircuts in Malta</h1>
+                <p class="text-lg mb-6">Established in 2020, one of the most sought after barbers located in the heart of Qawra, a small town in Saint Pauls bay that specialises in high quality male haircuts.</p>
+                <a href="#book" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-6 rounded-lg transition duration-300 inline-block">Book Your Appointment</a>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <img src="https://i.imgur.com/fkv8FAx.png" alt="Barber at work" class="rounded-lg shadow-2xl max-w-md w-full">
+            </div>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="text-yellow-500 text-4xl mb-4">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Classic Haircut</h3>
+                    <p class="text-gray-700 mb-4">A precision haircut with clippers and scissors.</p>
+                    <p class="text-yellow-600 font-bold">$12</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="text-yellow-500 text-4xl mb-4">
+                        <i class="fas fa-air-freshener"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Beard Trim</h3>
+                    <p class="text-gray-700 mb-4">Professional beard shaping and trimming with hot towel treatment.</p>
+                    <p class="text-yellow-600 font-bold">$15</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="text-yellow-500 text-4xl mb-4">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Royal Treatment</h3>
+                    <p class="text-gray-700 mb-4">Haircut, beard trim, hot towel shave, and relaxing scalp massage.</p>
+                    <p class="text-yellow-600 font-bold">$25</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="text-yellow-500 text-4xl mb-4">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Kids Cut (under 12 yrs)</h3>
+                    <p class="text-gray-700 mb-4">Specialized haircut for young gentlemen with a fun, comfortable experience.</p>
+                    <p class="text-yellow-600 font-bold">$8</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="text-yellow-500 text-4xl mb-4">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Hot Towel Shave</h3>
+                    <p class="text-gray-700 mb-4">Traditional straight razor shave with hot towela and premium shaving products.</p>
+                    <p class="text-yellow-600 font-bold">$20</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="text-yellow-500 text-4xl mb-4">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Executive Package</h3>
+                    <p class="text-gray-700 mb-4">Haircut, beard trim, facial massage, and shoe shine for the busy professional.</p>
+                    <p class="text-yellow-600 font-bold">$45</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Barbers Section -->
+    <section id="barbers" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Meet Our Barbers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1">
+                    <img src="https://i.imgur.com/vFEwBU6.png" alt="Barber Tony" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-1">[name]</h3>
+                        <p class="text-yellow-600 mb-3">Master Barber</p>
+                        <p class="text-gray-700">With 15 years of experience, [name] is a jack of all trades when it comes to male haircuts and beard trimming.</p>
+                        <div class="mt-4 flex space-x-2">
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Fades</span>
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Beards</span>
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Hot Towels</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1">
+                    <img src="https://i.imgur.com/kmEGlAf.png" alt="Barber [name]" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-1">[name]</h3>
+                        <p class="text-yellow-600 mb-3">Senior Barber</p>
+                        <p class="text-gray-700">[name] brings modern techniques to traditional barbering for a fresh look.</p>
+                        <div class="mt-4 flex space-x-2">
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Modern Cuts</span>
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Color</span>
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Styling</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1">
+                    <img src="https://i.imgur.com/gisffj5.png" alt="Barber [name]" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-1">[name]</h3>
+                        <p class="text-yellow-600 mb-3">Master Barber</p>
+                        <p class="text-gray-700">[name] is known for his precision clipper work and attention to detail.</p>
+                        <div class="mt-4 flex space-x-2">
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Skin Fades</span>
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Line Ups</span>
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Kids Cuts</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1">
+                    <img src="https://i.imgur.com/1BeNXAC.png" alt="[name]" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-1">[name]</h3>
+                        <p class="text-yellow-600 mb-3">Barber</p>
+                        <p class="text-gray-700">[name] specializes in traditional wet shaves and beard grooming.</p>
+                        <div class="mt-4 flex space-x-2">
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Shaves</span>
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Beards</span>
+                            <span class="bg-gray-200 px-2 py-1 rounded text-sm">Facials</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Koalendar Inline Embed Start -->
+     <section id="book">
+<div id="inline-widget-barber-booking"></div>
+<script>window.Koalendar=window.Koalendar||function(){(Koalendar.props=Koalendar.props||[]).push(arguments)};</script>
+<script async src="https://koalendar.com/assets/widget.js"></script>
+<script>Koalendar('inline', {"url":"https://koalendar.com/e/barber-booking","selector":"#inline-widget-barber-booking"});</script>
+<!-- Koalendar Inline Embed End -->
+
+    <!-- Confirmation Modal (hidden by default) -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 confirmation">
+            <div class="text-center">
+                <div class="text-green-500 text-5xl mb-4">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">Booking Confirmed!</h3>
+                <p class="text-gray-700 mb-4" id="confirmation-details"></p>
+                <p class="text-gray-600 mb-6">We've sent the details to your email. See you soon!</p>
+                <button id="close-modal" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-6 rounded-lg transition duration-300">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Visit Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="bg-white p-6 rounded-lg shadow-md h-full">
+                        <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-yellow-500 mt-1 mr-3"></i>
+                                <p></p>141 Il- Wileg, St Paul's Bay</p>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-phone-alt text-yellow-500 mr-3"></i>
+                                <p>+(356) 9942 6704</p>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-envelope text-yellow-500 mr-3"></i>
+                                <p>[email]@gmail.com</p>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-clock text-yellow-500 mr-3"></i>
+                                <div>
+                                    <p class="font-semibold">Opening Hours:</p>
+                                    <p>Tuesday - Saturday: 9am - 7:30pm</p>
+                                    <p>Sunday - Monday: closed</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="font-bold mb-2">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="text-gray-700 hover:text-yellow-500 text-xl"><i class="fab fa-facebook"></i></a>
+                                <a href="https://www.instagram.com/themerchantbarber/" class="text-gray-700 hover:text-yellow-500 text-xl"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="text-gray-700 hover:text-yellow-500 text-xl"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="text-gray-700 hover:text-yellow-500 text-xl"><i class="fab fa-tiktok"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                <div class="bg-white p-6 rounded-lg shadow-md h-full">
+                 <h3 class="text-xl font-bold mb-4">Location</h3>
+                     <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                 <iframe 
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2383.332274185552!2d14.41533489466397!3d35.94569210024779!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x130e4f2f9422387f%3A0xd688751fd05b1acf!2sMERCHANT%20BARBER%20SHOP!5e1!3m2!1sen!2smt!4v1750424541472!5m2!1sen!2smt" 
+                     width="100%" 
+                      height="100%" 
+                     style="border:0;" 
+                      allowfullscreen="" 
+                      loading="lazy" 
+                     referrerpolicy="no-referrer-when-downgrade">
+                  </iframe>
+                   </div>
+    <div class="mt-4">
+        <h4 class="font-bold mb-2">Place</h4>
+        <p class="text-gray-700">
+            Supreme location in Qawra.
+        </p>
+    </div>
+</div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-cut text-yellow-400 text-2xl"></i>
+                        <span class="text-xl font-bold">Classic Cuts</span>
+                    </div>
+                    <p class="text-gray-400 mt-2">Precision haircuts for the modern gentleman since 2010.</p>
+                </div>
+                <div class="flex flex-col items-center md:items-end">
+                    <p class="text-gray-400">&copy; 2020 Classic Cuts Barber Shop. All rights reserved.</p>
+                    <div class="mt-2 flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
+                        <a href="#" class="text-gray-400 hover:text-white">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Calendar functionality
+        let currentDate = new Date();
+        let selectedDate = null;
+
+        function renderCalendar() {
+            const calendar = document.querySelector('.calendar');
+            const currentMonthElement = document.getElementById('current-month');
+            
+            // Clear existing calendar days (except headers)
+            while (calendar.children.length > 7) {
+                calendar.removeChild(calendar.lastChild);
+            }
+            
+            // Set month and year in header
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            currentMonthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            
+            // Get first day of month and total days in month
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            
+            // Get days from previous month
+            const prevMonthDays = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+            
+            // Add days from previous month
+            for (let i = 0; i < firstDay; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day disabled';
+                dayElement.textContent = prevMonthDays - firstDay + i + 1;
+                calendar.appendChild(dayElement);
+            }
+            
+            // Add days of current month
+            const today = new Date();
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = i;
+                
+                // Check if this day is today
+                if (currentDate.getFullYear() === today.getFullYear() && 
+                    currentDate.getMonth() === today.getMonth() && 
+                    i === today.getDate()) {
+                    dayElement.classList.add('selected');
+                    if (!selectedDate) {
+                        selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+                        updateTimeSlots();
+                    }
+                }
+                
+                // Check if this day is selected
+                if (selectedDate && 
+                    currentDate.getFullYear() === selectedDate.getFullYear() && 
+                    currentDate.getMonth() === selectedDate.getMonth() && 
+                    i === selectedDate.getDate()) {
+                    dayElement.classList.add('selected');
+                }
+                
+                // Disable past days
+                if (currentDate.getFullYear() < today.getFullYear() || 
+                    (currentDate.getFullYear() === today.getFullYear() && 
+                    currentDate.getMonth() < today.getMonth()) || 
+                    (currentDate.getFullYear() === today.getFullYear() && 
+                    currentDate.getMonth() === today.getMonth() && 
+                    i < today.getDate())) {
+                    dayElement.classList.add('disabled');
+                } else {
+                    dayElement.addEventListener('click', function() {
+                        // Remove selected class from all days
+                        document.querySelectorAll('.calendar-day').forEach(day => {
+                            day.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to clicked day
+                        this.classList.add('selected');
+                        
+                        // Update selected date
+                        selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(this.textContent));
+                        updateTimeSlots();
+                    });
+                }
+                
+                calendar.appendChild(dayElement);
+            }
+            
+            // Calculate total cells so far
+            const totalCells = firstDay + daysInMonth;
+            const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+            
+            // Add days from next month
+            for (let i = 1; i <= remainingCells; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day disabled';
+                dayElement.textContent = i;
+                calendar.appendChild(dayElement);
+            }
+        }
+        
+        // Previous month button
+        document.getElementById('prev-month').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+        
+        // Next month button
+        document.getElementById('next-month').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+        
+        // Generate time slots
+        function updateTimeSlots() {
+            const timeSlotsContainer = document.getElementById('time-slots');
+            timeSlotsContainer.innerHTML = '';
+            
+            if (!selectedDate) return;
+            
+            // Check if selected date is today
+            const today = new Date();
+            const isToday = selectedDate.getDate() === today.getDate() && 
+                           selectedDate.getMonth() === today.getMonth() && 
+                           selectedDate.getFullYear() === today.getFullYear();
+            
+            // Generate time slots (every 30 minutes from 9am to 7pm)
+            const startHour = isToday ? Math.max(9, today.getHours() + (today.getMinutes() > 30 ? 2 : 1)) : 9;
+            const endHour = 19;
+            
+            for (let hour = startHour; hour < endHour; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    // Skip if it's past current time for today
+                    if (isToday && ((hour === today.getHours() && minute <= today.getMinutes()) || hour < today.getHours())) {
+                        continue;
+                    }
+                    
+                    const timeString = `${hour > 12 ? hour - 12 : hour}:${minute === 0 ? '00' : '30'} ${hour >= 12 ? 'PM' : 'AM'}`;
+                    const timeSlot = document.createElement('button');
+                    timeSlot.className = 'bg-white hover:bg-yellow-100 border border-gray-300 rounded py-2 px-1 text-sm transition';
+                    timeSlot.textContent = timeString;
+                    timeSlot.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.querySelectorAll('#time-slots button').forEach(btn => {
+                            btn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-600');
+                            btn.classList.add('bg-white', 'border-gray-300');
+                        });
+                        this.classList.remove('bg-white', 'border-gray-300');
+                        this.classList.add('bg-yellow-500', 'text-white', 'border-yellow-600');
+                    });
+                    timeSlotsContainer.appendChild(timeSlot);
+                }
+            }
+            
+            // If no time slots available (all booked or past time)
+            if (timeSlotsContainer.children.length === 0) {
+                timeSlotsContainer.innerHTML = '<p class="text-gray-500 col-span-3 text-center">No available time slots for this day</p>';
+            }
+        }
+        
+        // Form submission
+        document.getElementById('booking-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get selected time
+            const selectedTimeButton = document.querySelector('#time-slots button.bg-yellow-500');
+            if (!selectedTimeButton && document.getElementById('time-slots').children.length > 0) {
+                alert('Please select a time slot');
+                return;
+            }
+            
+            // In a real app, you would send this data to your backend
+            const bookingDetails = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                barber: document.getElementById('barber').value,
+                service: document.getElementById('service').value,
+                requests: document.getElementById('requests').value,
+                date: selectedDate ? selectedDate.toLocaleDateString() : 'Not selected',
+                time: selectedTimeButton ? selectedTimeButton.textContent : 'Not selected'
+            };
+            
+            // Show confirmation modal
+            const confirmationDetails = document.getElementById('confirmation-details');
+            confirmationDetails.innerHTML = `
+                <p class="mb-1"><strong>Name:</strong> ${bookingDetails.name}</p>
+                <p class="mb-1"><strong>Service:</strong> ${document.getElementById('service').options[document.getElementById('service').selectedIndex].text}</p>
+                <p class="mb-1"><strong>Barber:</strong> ${document.getElementById('barber').options[document.getElementById('barber').selectedIndex].text}</p>
+                <p class="mb-1"><strong>Date:</strong> ${bookingDetails.date}</p>
+                <p class="mb-1"><strong>Time:</strong> ${bookingDetails.time}</p>
+            `;
+            
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+            
+            // Reset form
+            this.reset();
+            if (selectedTimeButton) {
+                selectedTimeButton.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-600');
+                selectedTimeButton.classList.add('bg-white', 'border-gray-300');
+            }
+        });
+        
+        // Close modal
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('confirmation-modal').classList.add('hidden');
+        });
+        
+        // Initialize calendar
+        renderCalendar();
+        */
+    </script>
+</body>
+</html>
